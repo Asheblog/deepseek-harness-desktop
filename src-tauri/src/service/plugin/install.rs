@@ -2367,9 +2367,14 @@ onlyBuiltDependencies:
         )
         .unwrap();
         assert!(declared_main_entry(&dir).is_none());
+        let absolute_entry = if cfg!(windows) {
+            "C:\\\\outside\\\\index.js"
+        } else {
+            "/outside/index.js"
+        };
         std::fs::write(
             dir.join("package.json"),
-            r#"{"name":"x","main":"C:\\outside\\index.js"}"#,
+            format!(r#"{{"name":"x","main":"{}"}}"#, absolute_entry),
         )
         .unwrap();
         assert!(declared_main_entry(&dir).is_none());
